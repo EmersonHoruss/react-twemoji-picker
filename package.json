@@ -1,7 +1,13 @@
 {
   "name": "react-twemoji-picker",
-  "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "A simple emoji picker for React based on Twemoji",
+  "main": "dist/react-twemoji-picker.cjs.js",
+  "module": "dist/react-twemoji-picker.es.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -26,5 +32,22 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.45.0",
     "vite": "^7.1.7"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "keywords": [
+    "react",
+    "emoji",
+    "twemoji",
+    "picker",
+    "library"
+  ],
+  "author": "Emerson Perales",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EmersonHoruss/react-twemoji-picker"
   }
 }
