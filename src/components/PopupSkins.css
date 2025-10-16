@@ -1,0 +1,60 @@
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+#popper-skins-container {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  padding: 0;
+  background: #f7f7f7;
+  border: none;
+  border-radius: 3px;
+  animation: fadein 300ms;
+  z-index: 1;
+  display: none;
+
+  &[data-show] {
+    display: block;
+  }
+}
+
+#skins-arrow {
+  position: absolute;
+  z-index: -1;
+
+  &::before {
+    position: absolute;
+    z-index: -1;
+    content: "";
+    transform: rotate(45deg);
+    background: #f0f0f0;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+#popper-skins-container[data-popper-placement^="top"] > #skins-arrow {
+  bottom: 12px;
+  padding-right: 20px;
+  left: -10px;
+}
+
+#popper-skins-container[data-popper-placement^="bottom"] > #skins-arrow {
+  top: -12px;
+  padding-right: 32px;
+}
+
+#popper-skins-container[data-popper-placement^="left"] > #skins-arrow {
+  right: 12px;
+  padding-bottom: 32px;
+}
+
+#popper-skins-container[data-popper-placement^="right"] > #skins-arrow {
+  left: -12px;
+  padding-bottom: 32px;
+}

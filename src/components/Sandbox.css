@@ -1,0 +1,30 @@
+@import "../assets/simple-grid.css";
+
+body {
+  background-color: #ffffff;
+}
+
+a {
+  text-decoration: none;
+  color: #05adad;
+}
+
+a:hover {
+  color: teal;
+}
+
+#app {
+  padding: 20% 10%;
+}
+
+#app > div {
+  margin: 100vh 0;
+}
+
+#test-picker {
+  padding-left: 500px;
+}
+
+#twemojison {
+  padding-top: 15px;
+}
