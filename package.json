@@ -11,7 +11,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && npm run build:types",
+    "build:types": "tsc --project tsconfig.types.json",
     "lint": "eslint .",
     "preview": "vite preview"
   },
