@@ -1,0 +1,6 @@
+import type Emoji from './Emoji';
+
+export default interface EmojiPack {
+  group: number;
+  emojiList: Array<Emoji>;
+}
