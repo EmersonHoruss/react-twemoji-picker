@@ -2,13 +2,15 @@ import React from "react";
 import EmojiService from "../../services/EmojiService";
 
 import PopupEmoji from "../PopupEmoji";
-import PopupSkins from "../PopupSkins";
+// import PopupSkins from "../PopupSkins";
 
 import type EmojiPack from "../../interfaces/EmojiPack";
 import type Emoji from "../../interfaces/Emoji";
 import type TwemojiOptions from "../../interfaces/TwemojiOptions";
 import type EmojiGroup from "../../interfaces/EmojiGroup";
 import type { Placement } from "@popperjs/core";
+
+import "./TwemojiPicker.css";
 
 interface TwemojiPickerProps {
   emojiPickerDisabled: boolean;
@@ -88,8 +90,126 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
   pickerPaddingOffset = 5,
   emojiTextWeightChanged = false,
 }) => {
+  const containerSlot = (
+    <div id="emoji-container">
+      <div id="emoji-popup" style={{ width: `${calculatedPickerWidth}px` }}>
+        {searchEmojisFeat && (
+          <div id="emoji-popover-search">
+            <div
+              id="search-header"
+              className={isSearchFocused ? "is-focused" : ""}
+            >
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: getEmojiImgFromUnicode("🔍"),
+                }}
+              ></span>
+              <input
+                placeholder={searchEmojiPlaceholder}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onInput={searchEmojiByTerm}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setIsSearchFocused(false)}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div id="emoji-popover-header" className="scroll-min">
+        {recentEmojisFeat && recentEmojis.length !== 0 && (
+          <span
+            dangerouslySetInnerHTML={{
+              __html: getEmojiImgFromUnicode("🕒"),
+            }}
+            className={`emoji-tab ${emojiGroupActive === -1 ? "active" : ""}`}
+            onClick={() => changeEmojiListActive(-1)}
+          />
+        )}
+
+        {emojiPack.map((emojiGroup, index) => (
+          <span
+            key={emojiGroup.group}
+            id={emojiGroup.group}
+            dangerouslySetInnerHTML={{
+              __html: getEmojiGroupDescription(emojiGroup.group),
+            }}
+            className={`emoji-tab ${
+              emojiGroupActive === index ? "active" : ""
+            }`}
+            onClick={() => changeEmojiListActive(index)}
+          />
+        ))}
+        <span />
+      </div>
+
+      <div
+        className="emoji-popover-inner"
+        style={{
+          width: `${calculatedPickerWidth}px`,
+          height: `${pickerHeight}px`,
+        }}
+      >
+        {isSearchingEmoji && (
+          <div>
+            <strong style={{ padding: "3px" }} id="loading-label">
+              {isLoadingLabel}
+            </strong>
+          </div>
+        )}
+
+        {searchTerm.length !== 0 &&
+          searchEmojis.length === 0 &&
+          isSearchingEmoji === false && (
+            <div>
+              <strong style={{ padding: "3px" }}>
+                {{ searchEmojiNotFound }}
+              </strong>
+            </div>
+          )}
+
+        {emojiListActive.length !== 0 && isSearchingEmoji === false && (
+          <div>
+            <p className="emoji-list">
+              {emojiListActive.map((emoji) => (
+                <span
+                  id={`twemoji-picker-click-emoji-${emoji.unicode}`}
+                  key={emoji.unicode}
+                  dangerouslySetInnerHTML={{ __html: emoji.img }}
+                  onClick={() => clickEmoji(emoji)}
+                  onMouseDown={() => startClickingSkinInterval(emoji)}
+                  onMouseLeave={stopClickingSkinInterval}
+                  onMouseUp={stopClickingSkinInterval}
+                  onTouchStart={() => startClickingSkinInterval(emoji)}
+                  onTouchEnd={stopClickingSkinInterval}
+                  onTouchCancel={stopClickingSkinInterval}
+                />
+              ))}
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  const buttonSlot = <button></button>;
+
   return (
     <div>
+      {emojiData && emojiData.length > 0 && (
+        <PopupEmoji
+          disabled={emojiPickerDisabled}
+          placement={pickerPlacement}
+          autoflip={pickerAutoflip}
+          arrowEnabled={pickerArrowEnabled}
+          triggerType={triggerType}
+          extraPaddingOffset={pickerPaddingOffset}
+          closeOnClickaway={pickerCloseOnClickaway}
+          containerSlot={containerSlot}
+          buttonSlot={buttonSlot}
+        />
+      )}
       <span id="dummy-clickable-skin" />
     </div>
   );
