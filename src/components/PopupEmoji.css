@@ -1,0 +1,83 @@
+/* Animation */
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+#popper-container {
+  padding: 0;
+  background: #f7f7f7;
+  border: none;
+  border-radius: 3px;
+  animation: fadein 300ms;
+  z-index: 1;
+  display: none;
+}
+
+#popper-container[data-show] {
+  display: block;
+}
+
+#popper-button {
+  display: inline-block;
+}
+
+#arrow {
+  position: absolute;
+  z-index: -1;
+}
+
+#arrow::before {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  transform: rotate(45deg);
+  background: #f0f0f0;
+  width: 24px;
+  height: 24px;
+}
+
+#popper-container[data-popper-placement^="top"] > #arrow {
+  bottom: 12px;
+  padding-right: 32px;
+}
+
+#popper-container[data-popper-placement^="top-start"] > #arrow {
+  bottom: 12px;
+  padding-right: 20px;
+}
+
+#popper-container[data-popper-placement^="bottom"] > #arrow {
+  top: -12px;
+  padding-right: 32px;
+}
+
+#popper-container[data-popper-placement^="bottom-start"] > #arrow {
+  top: -12px;
+  padding-right: 20px;
+}
+
+#popper-container[data-popper-placement^="left"] > #arrow {
+  right: 12px;
+  padding-bottom: 32px;
+}
+
+#popper-container[data-popper-placement^="left-start"] > #arrow {
+  right: 12px;
+  padding-bottom: 5px;
+}
+
+#popper-container[data-popper-placement^="right"] > #arrow {
+  left: -12px;
+  padding-bottom: 32px;
+}
+
+#popper-container[data-popper-placement^="right-start"] > #arrow {
+  left: -12px;
+  padding-bottom: 5px;
+}

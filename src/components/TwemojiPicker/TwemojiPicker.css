@@ -1,0 +1,235 @@
+#emoji-container {
+  z-index: 1;
+}
+
+#emoji-container > #emoji-popup {
+  border: 1px solid #f0f0f0;
+  border-radius: 5px;
+  padding: 3px;
+}
+
+#emoji-container > #emoji-popup img.emoji {
+  height: 32px;
+  width: 32px;
+  vertical-align: -0.5rem;
+}
+
+#emoji-container > #emoji-popup > #emoji-popover-header {
+  padding: 15px 5px;
+  overflow-y: hidden;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+#emoji-container
+  > #emoji-popup
+  > #emoji-popover-header::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: #f2f2f2;
+}
+
+#emoji-container > #emoji-popup > #emoji-popover-header::-webkit-scrollbar {
+  height: 12px;
+  background-color: #f2f2f2;
+}
+
+#emoji-container
+  > #emoji-popup
+  > #emoji-popover-header::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #c1c1c1;
+}
+
+#emoji-container > #emoji-popup > #emoji-popover-header > .emoji-tab {
+  margin: 3px;
+  padding: 8px 5px;
+  cursor: pointer;
+  border-radius: 2px;
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+
+#emoji-container > #emoji-popup > #emoji-popover-header > .emoji-tab:hover {
+  border-bottom: 5px solid #b3b3b3;
+  opacity: 1;
+  filter: grayscale(0);
+}
+
+#emoji-container > #emoji-popup > #emoji-popover-header > .emoji-tab.active {
+  border-bottom: 5px solid #b3b3b3;
+  opacity: 1;
+  filter: grayscale(0);
+}
+
+#emoji-container > #emoji-popup .emoji-popover-inner {
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #f7f7f7;
+}
+
+#emoji-container > #emoji-popup .emoji-popover-inner::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: #f2f2f2;
+}
+
+#emoji-container > #emoji-popup .emoji-popover-inner::-webkit-scrollbar {
+  width: 12px;
+  background-color: #f2f2f2;
+}
+
+#emoji-container > #emoji-popup .emoji-popover-inner::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #c1c1c1;
+}
+
+#emoji-container > #emoji-popup .emoji-popover-inner #loading-label {
+  margin: 0 5px;
+}
+
+#emoji-container > #emoji-popup .emoji-popover-inner > div > .emoji-list {
+  padding: 10px;
+  margin: 0;
+  text-align: justify;
+}
+
+#emoji-container
+  > #emoji-popup
+  .emoji-popover-inner
+  > div
+  > .emoji-list
+  > span {
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 15px;
+}
+
+#emoji-container
+  > #emoji-popup
+  .emoji-popover-inner
+  > div
+  > .emoji-list
+  > span:hover {
+  background-color: #cacaca;
+}
+
+#emoji-container
+  > #emoji-popup
+  .emoji-popover-inner
+  > div
+  > .emoji-list
+  > span
+  > img {
+  margin: 5px;
+}
+
+#emoji-container > #emoji-popup #emoji-popover-search {
+  background-color: #f7f7f7;
+  border-radius: 3px;
+  margin: 5px 0;
+}
+
+#emoji-container > #emoji-popup #emoji-popover-search > #search-header {
+  padding-top: 5px 0;
+  display: flex;
+  border: 1px solid #e6e6e6;
+  border-radius: 25px;
+}
+
+#emoji-container
+  > #emoji-popup
+  #emoji-popover-search
+  > #search-header.is-focused {
+  background-color: #fcfcfc;
+  transition: background-color 300ms ease-in-out;
+}
+
+#emoji-container
+  > #emoji-popup
+  #emoji-popover-search
+  > #search-header.is-focused
+  > span {
+  filter: grayscale(0);
+  transition: filter 300ms ease-in-out;
+}
+
+#emoji-container > #emoji-popup #emoji-popover-search > #search-header > span {
+  flex-grow: 1;
+  padding: 5px 10px;
+  width: 32px !important;
+  text-align: center;
+  filter: grayscale(1);
+}
+
+#emoji-container
+  > #emoji-popup
+  #emoji-popover-search
+  > #search-header
+  > span
+  > img {
+  width: 24px;
+  height: 24px;
+}
+
+#emoji-container > #emoji-popup #emoji-popover-search > #search-header > input {
+  flex-grow: 99;
+  padding: 10px 5px;
+  margin: 0 10px;
+  border: none;
+  font-size: 1rem;
+  background-color: inherit;
+  outline: none;
+}
+
+/* Popper Emoji */
+#btn-emoji-default {
+  flex-grow: 100;
+  border: none;
+  cursor: pointer;
+  height: 45px;
+  width: 45px;
+  margin: 10px;
+  background-color: transparent;
+}
+
+#btn-emoji-default > div > img.emoji {
+  height: 32px;
+  width: 32px;
+}
+
+#btn-emoji-default > #dummy-el {
+  height: 32px;
+  width: 32px;
+}
+
+#btn-emoji-default:disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Cursor */
+.clickable {
+  cursor: pointer;
+}
+
+/* Transition - Fade */
+.fade-in {
+  opacity: 1;
+  animation-name: fadeInOpacity;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-duration: 0.3s;
+}
+
+@keyframes fadeInOpacity {
+  0% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

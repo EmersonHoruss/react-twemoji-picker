@@ -17,25 +17,25 @@
   animation: fadein 300ms;
   z-index: 1;
   display: none;
+}
 
-  &[data-show] {
-    display: block;
-  }
+#popper-skins-container[data-show] {
+  display: block;
 }
 
 #skins-arrow {
   position: absolute;
   z-index: -1;
+}
 
-  &::before {
-    position: absolute;
-    z-index: -1;
-    content: "";
-    transform: rotate(45deg);
-    background: #f0f0f0;
-    width: 24px;
-    height: 24px;
-  }
+#skins-arrow::before {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  transform: rotate(45deg);
+  background: #f0f0f0;
+  width: 24px;
+  height: 24px;
 }
 
 #popper-skins-container[data-popper-placement^="top"] > #skins-arrow {
