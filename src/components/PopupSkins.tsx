@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import "./PopupSkins.css";
+
 import {
   popperGenerator,
   defaultModifiers,
@@ -18,6 +18,8 @@ import arrow from "@popperjs/core/lib/modifiers/arrow";
 import useOnclickOutside from "react-cool-onclickoutside";
 
 import type EmojiSkin from "../interfaces/EmojiSkin";
+
+import "./PopupSkins.css";
 
 interface PopupSkinsProps {
   disabled: boolean;

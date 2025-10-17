@@ -12,6 +12,8 @@ import type { Instance, Modifier, Placement } from "@popperjs/core";
 import useOnclickOutside from "react-cool-onclickoutside";
 import type PopperObject from "../interfaces/PopperObject";
 
+import "./PopupEmoji.css";
+
 interface PopupEmojiProps {
   disabled: boolean;
   placement: Placement;
