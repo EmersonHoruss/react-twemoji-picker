@@ -193,7 +193,23 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
     </div>
   );
 
-  const buttonSlot = <button></button>;
+  const buttonSlot = (
+    <button
+      id="btn-emoji-default"
+      disabled={emojiPickerDisabled}
+      onMouseEnter={onMouseEnterEmojiBtn}
+      onMouseLeave={onMouseLeaveEmojiBtn}
+    >
+      {showEmoji ? (
+        <div
+          className="fade-in"
+          dangerouslySetInnerHTML={{ __html: randomEmojiImg }}
+        />
+      ) : (
+        <div id="dummy-el" />
+      )}
+    </button>
+  );
 
   return (
     <div>
