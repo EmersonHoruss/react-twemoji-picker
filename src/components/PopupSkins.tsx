@@ -65,11 +65,13 @@ const PopupSkins: React.FC<PopupSkinsProps> = ({
     if (debouncedPopperOpen && popperInstance && containerRef?.current) {
       containerRef.current.removeAttribute("data-show");
       setPopperOpen(false);
-      setTimeout(popperInstance.forceUpdate, 1);
+      setTimeout(() => {
+        popperInstance.forceUpdate?.();
+      }, 1);
     }
   });
 
-  const setRefs = useCallback(
+  const containerSetRefs = useCallback(
     (el: HTMLElement | null) => {
       containerRef.current = el;
       onClickOutsideRef(el);
@@ -79,7 +81,7 @@ const PopupSkins: React.FC<PopupSkinsProps> = ({
 
   return (
     <div>
-      <div ref={setRefs} id="popper-skins-container">
+      <div ref={containerSetRefs} id="popper-skins-container">
         <div id="skins-arrow" data-popper-arrow />
         <div id="popper-inner">
           <div className="emoji-popover-inner">
