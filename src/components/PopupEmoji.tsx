@@ -95,13 +95,11 @@ const PopupEmoji: React.FC<PopupEmojiProps> = ({
     );
 
     setPopperInstance(popperInstanceRef);
-  }, [
-    autoflip,
-    arrowEnabled,
-    placement,
-    extraPaddingOffset,
-    setPopperInstance,
-  ]);
+
+    return () => {
+      popperInstanceRef.destroy();
+    };
+  }, [autoflip, arrowEnabled, placement, extraPaddingOffset]);
 
   useEffect(() => {
     const el = containerRef.current;
