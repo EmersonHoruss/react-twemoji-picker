@@ -1,33 +1,51 @@
-import { useState } from 'react'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useRef, useCallback } from "react";
+import useOnclickOutside from "react-cool-onclickoutside";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const containerRef = useRef<HTMLElement | null>(null);
+
+  const handleClickOutside = () => {
+    if (containerRef.current) {
+      containerRef.current.removeAttribute("data-active");
+    }
+  };
+
+  const reactCoolRef = useOnclickOutside(handleClickOutside);
+
+  // 👇 memoizamos el ref callback para evitar renders infinitos
+  const setRefs = useCallback(
+    (el: HTMLElement | null) => {
+      console.log("uwu")
+      containerRef.current = el;
+      reactCoolRef(el);
+    },
+    [reactCoolRef]
+  );
+
+  const handleAddAttribute = () => {
+    if (containerRef.current) {
+      containerRef.current.setAttribute("data-active", "true");
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-        </a>
+    <div className="p-4">
+      <button
+        onClick={handleAddAttribute}
+        className="mb-3 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+      >
+        Activar atributo
+      </button>
+
+      <div
+        ref={setRefs}
+        id="container"
+        className="p-4 border rounded transition-colors"
+      >
+        Contenedor (haz click fuera para remover el atributo)
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;

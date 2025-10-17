@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import "./PopupSkins.css";
 import {
   popperGenerator,
@@ -15,7 +21,7 @@ import type EmojiSkin from "../interfaces/EmojiSkin";
 
 interface PopupSkinsProps {
   disabled: boolean;
-  offset: [number, number];
+  offsetProp: [number, number];
   emojiList: EmojiSkin[];
   clickEmoji: (emoji: EmojiSkin) => void;
 
@@ -25,15 +31,15 @@ interface PopupSkinsProps {
 
 const PopupSkins: React.FC<PopupSkinsProps> = ({
   disabled = false,
-  offset = [0, 30],
+  offsetProp = [0, 30],
   emojiList = [],
   clickEmoji,
 
   onPopperOpenChanged,
   onCloseOnClickawayChanged,
 }) => {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const buttonRef = useRef<HTMLElement | null>(null);
+  const containerRef = useRef<HTMLElement | null>(null);
+
   const [popperOpen, setPopperOpen] = useState(false);
   const [debouncedPopperOpen, setDebouncedPopperOpen] = useState(false);
   const [popperInstance, setPopperInstance] = useState<Instance | null>(null);
@@ -53,11 +59,27 @@ const PopupSkins: React.FC<PopupSkinsProps> = ({
     onCloseOnClickawayChanged?.(closeOnClickaway);
   }, [closeOnClickaway, onCloseOnClickawayChanged]);
 
-  
+  const onClickOutsideRef = useOnclickOutside(() => {
+    if (disabled || !closeOnClickaway) return;
+
+    if (debouncedPopperOpen && popperInstance && containerRef?.current) {
+      containerRef.current.removeAttribute("data-show");
+      setPopperOpen(false);
+      setTimeout(popperInstance.forceUpdate, 1);
+    }
+  });
+
+  const setRefs = useCallback(
+    (el: HTMLElement | null) => {
+      containerRef.current = el;
+      onClickOutsideRef(el);
+    },
+    [onClickOutsideRef]
+  );
 
   return (
     <div>
-      <div ref={containerRef} id="popper-skins-container">
+      <div ref={setRefs} id="popper-skins-container">
         <div id="skins-arrow" data-popper-arrow />
         <div id="popper-inner">
           <div className="emoji-popover-inner">
