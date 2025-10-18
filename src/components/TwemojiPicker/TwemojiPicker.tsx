@@ -7,8 +7,8 @@ import React, {
 } from "react";
 import EmojiService from "../../services/EmojiService";
 
-import PopupEmoji from "../PopupEmoji";
-import type { PopupEmojiRef } from "../PopupEmoji";
+import PopupEmoji from "../PopupEmoji/PopupEmoji";
+import type { PopupEmojiRef } from "../PopupEmoji/PopupEmoji";
 
 import type EmojiPack from "../../interfaces/EmojiPack";
 import type Emoji from "../../interfaces/Emoji";

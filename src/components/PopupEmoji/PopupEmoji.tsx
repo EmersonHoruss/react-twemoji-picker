@@ -16,7 +16,7 @@ import arrow from "@popperjs/core/lib/modifiers/arrow";
 import preventOverflow from "@popperjs/core/lib/modifiers/preventOverflow";
 import type { Instance, Modifier, Placement } from "@popperjs/core";
 import useOnclickOutside from "react-cool-onclickoutside";
-import type PopperObject from "../interfaces/PopperObject";
+import type PopperObject from "../../interfaces/PopperObject";
 
 import "./PopupEmoji.css";
 
@@ -37,7 +37,7 @@ interface PopupEmojiProps {
 
   containerSlot?: React.ReactNode;
   buttonSlot?: React.ReactNode;
-  
+
   onPopperOpenChanged?: (val: boolean) => void;
 }
 

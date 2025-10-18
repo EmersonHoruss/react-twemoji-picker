@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-import TwemojiPicker from "./TwemojiPicker/TwemojiPicker";
-import EmojiDataAll from "../../emoji-data/en/emoji-all-groups.json";
-import EmojiGroups from "../../emoji-data/emoji-groups.json";
+import TwemojiPicker from "../TwemojiPicker/TwemojiPicker";
+import EmojiDataAll from "../../../emoji-data/en/emoji-all-groups.json";
+import EmojiGroups from "../../../emoji-data/emoji-groups.json";
 
 import "./Sandbox.css";
 
