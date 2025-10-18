@@ -19,32 +19,32 @@ import type { Placement } from "@popperjs/core";
 import "./TwemojiPicker.css";
 
 interface TwemojiPickerProps {
-  emojiPickerDisabled: boolean;
-  pickerWidth: number | string;
-  pickerHeight: number;
-  pickerPlacement: Placement;
-  pickerArrowEnabled: boolean;
-  pickerAutoflip: boolean;
-  pickerCloseOnClickaway: boolean;
-  triggerType: "click" | "hover";
+  emojiPickerDisabled?: boolean;
+  pickerWidth?: number | string;
+  pickerHeight?: number;
+  pickerPlacement?: Placement;
+  pickerArrowEnabled?: boolean;
+  pickerAutoflip?: boolean;
+  pickerCloseOnClickaway?: boolean;
+  triggerType?: "click" | "hover";
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  emojiData: Array<any>;
+  emojiData?: Array<any>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  emojiGroups: Array<any>;
-  recentEmojisFeat: boolean;
-  recentEmojisStorage: "local" | "session" | "none";
-  recentEmojiStorageName: string;
-  recentEmojiLimit: number;
-  searchEmojisFeat: boolean;
-  searchEmojiPlaceholder: string;
-  isLoadingLabel: string;
-  searchEmojiNotFound: string;
-  twemojiPath: string;
-  twemojiExtension: ".png" | ".svg" | ".jpg" | ".jpeg" | ".ico";
-  twemojiFolder: string;
+  emojiGroups?: Array<any>;
+  recentEmojisFeat?: boolean;
+  recentEmojisStorage?: "local" | "session" | "none";
+  recentEmojiStorageName?: string;
+  recentEmojiLimit?: number;
+  searchEmojisFeat?: boolean;
+  searchEmojiPlaceholder?: string;
+  isLoadingLabel?: string;
+  searchEmojiNotFound?: string;
+  twemojiPath?: string;
+  twemojiExtension?: ".png" | ".svg" | ".jpg" | ".jpeg" | ".ico";
+  twemojiFolder?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  randomEmojiArray: Array<any>;
-  pickerPaddingOffset: number;
+  randomEmojiArray?: Array<any>;
+  pickerPaddingOffset?: number;
 
   onAddTextBlur?: (emojiUnicode: string) => void;
   onEmojiUnicodeAdded?: (emojiUnicode: string) => void;
@@ -90,7 +90,7 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
   recentEmojisStorage = "none",
   recentEmojiStorageName = "vue-recent-twemojis",
   recentEmojiLimit = 12,
-  searchEmojisFeat = false,
+  searchEmojisFeat = true,
   searchEmojiPlaceholder = "Search emojis.",
   isLoadingLabel = "Loading...",
   searchEmojiNotFound = "No emojis found.",
@@ -400,32 +400,39 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
       ext: twemojiExtension,
       size: twemojiFolder,
     });
+  }, [twemojiPath, twemojiExtension, twemojiFolder]);
+
+  useEffect(() => {
+    if (!twemojiOptions) return;
+
+    buildEmojiPack();
+    setRandomEmojiFunc();
 
     if (recentEmojisFeat) {
       setRecentEmojisFunc();
     }
-
-    buildEmojiPack();
-    setEmojiListActive(emojiPack[0]?.emojiList ?? []);
-    setRandomEmojiFunc();
   }, [
-    buildEmojiPack,
-    emojiPack,
+    twemojiOptions,
     recentEmojisFeat,
-    setRandomEmojiFunc,
+    buildEmojiPack,
     setRecentEmojisFunc,
-    twemojiExtension,
-    twemojiFolder,
-    twemojiPath,
+    setRandomEmojiFunc,
   ]);
 
-  const randomEmojiImg = useMemo(() => {
+  useEffect(() => {
+    if (emojiPack.length > 0) {
+      setEmojiListActive(emojiPack[0].emojiList);
+    }
+  }, [emojiPack]);
+
+  useEffect(() => {
     triggerShowEmoji();
+  }, [randomEmoji, triggerShowEmoji]);
 
+  const randomEmojiImg = useMemo(() => {
     if (!randomEmoji || !twemojiOptions) return "";
-
     return EmojiService.getEmojiImgFromUnicode(randomEmoji, twemojiOptions);
-  }, [randomEmoji, triggerShowEmoji, twemojiOptions]);
+  }, [randomEmoji, twemojiOptions]);
 
   const containerSlot = (
     <div id="emoji-container">
