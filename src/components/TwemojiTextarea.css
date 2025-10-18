@@ -1,0 +1,59 @@
+.twemoji-textarea-outer {
+  position: relative;
+  display: flex;
+  flex-flow: row wrap;
+  border-radius: 1px;
+}
+
+.twemoji-textarea-outer > #twemoji-textarea {
+  flex-grow: 95;
+  flex-basis: 0;
+  background-color: #ffffff;
+  font-size: 14px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  white-space: pre-wrap;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+  text-align: left;
+  cursor: text;
+}
+
+.twemoji-textarea-outer > #twemoji-textarea[placeholder]:empty::before {
+  content: attr(placeholder);
+  position: absolute;
+  color: gray;
+  background-color: transparent;
+}
+
+.twemoji-textarea-outer > #twemoji-textarea > img.emoji {
+  height: 1.5rem;
+  width: 1.5rem;
+  vertical-align: -0.5rem;
+}
+
+.twemoji-textarea-outer > #length-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 20px;
+  font-weight: bold;
+}
+
+.twemoji-textarea-outer > #send-btn {
+  cursor: pointer;
+  flex-grow: 5;
+  flex-basis: 0;
+  height: 40px;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 5px;
+  padding: 5px;
+}
+
+.twemoji-textarea-outer > #send-btn > img {
+  width: 25px;
+  height: 25px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
