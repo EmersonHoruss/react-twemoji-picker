@@ -17,7 +17,6 @@ import type EmojiGroup from "../../interfaces/EmojiGroup";
 import type { Placement } from "@popperjs/core";
 
 import "./TwemojiPicker.css";
-import type EmojiSkin from "../../interfaces/EmojiSkin";
 
 interface TwemojiPickerProps {
   emojiPickerDisabled: boolean;
@@ -105,14 +104,8 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
   onEmojiUnicodeAdded,
   onEmojiImgAdded,
 }) => {
-  const [clickingSkinInterval, setClickingSkinInterval] = useState<any>(false);
-  const [isClickingEmojiMouseDown, setIsClickingEmojiMouseDown] =
-    useState<boolean>(false);
-  const [popupSkinsClickaway, setPopupSkinsClickaway] = useState<boolean>(true);
-
+  const [, setIsClickingEmojiMouseDown] = useState<boolean>(false);
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
-  const [showSkinsSelector, setShowSkinsSelector] = useState<boolean>(false);
-  const [skinsListActive, setSkinsListActive] = useState<EmojiSkin[]>([]);
 
   const [emojiPack, setEmojiPack] = useState<EmojiPack[]>([]);
   const [emojiListActive, setEmojiListActive] = useState<Emoji[]>([]);
@@ -130,6 +123,7 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
 
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchEmojis, setSearchEmojis] = useState<Emoji[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [searchTimeout, setSearchTimeout] = useState<any>(null);
   const [isSearchingEmoji, setIsSearchingEmoji] = useState<boolean>(false);
   const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
@@ -254,8 +248,7 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
     ]
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const startClickingSkinInterval = useCallback((_emoji: Emoji) => {
+  const startClickingSkinInterval = useCallback(() => {
     setIsClickingEmojiMouseDown(false);
   }, []);
 
@@ -281,7 +274,6 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
 
   const changeEmojiListActive = useCallback(
     (index: number) => {
-      setShowSkinsSelector(false);
       setSearchTerm("");
       setEmojiGroupActive(index);
 
@@ -318,6 +310,7 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
 
   const searchEmojiByTerm = useCallback(() => {
     setIsSearchingEmoji(true);
+    clearTimeout(searchTimeout);
 
     if (searchTerm.length > 0) {
       const timeout = setTimeout(() => {
@@ -327,9 +320,9 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
           twemojiOptions,
           searchTerm
         );
+        setSearchEmojis(emojis);
         setEmojiGroupActive(-2);
         setEmojiListActive(emojis);
-        setShowSkinsSelector(false);
         setIsSearchingEmoji(false);
       }, 300);
       setSearchTimeout(timeout);
@@ -337,7 +330,13 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
       changeEmojiListActive(0);
       setIsSearchingEmoji(false);
     }
-  }, [changeEmojiListActive, emojiData, searchTerm, twemojiOptions]);
+  }, [
+    changeEmojiListActive,
+    emojiData,
+    searchTerm,
+    searchTimeout,
+    twemojiOptions,
+  ]);
 
   const popperOpenChanged = useCallback((popperOpen: boolean) => {
     setIsPickerOpen(popperOpen);
@@ -514,10 +513,10 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
                   key={emoji.unicode}
                   dangerouslySetInnerHTML={{ __html: emoji.img }}
                   onClick={() => clickEmoji(emoji)}
-                  onMouseDown={() => startClickingSkinInterval(emoji)}
+                  onMouseDown={startClickingSkinInterval}
                   onMouseLeave={stopClickingSkinInterval}
                   onMouseUp={stopClickingSkinInterval}
-                  onTouchStart={() => startClickingSkinInterval(emoji)}
+                  onTouchStart={startClickingSkinInterval}
                   onTouchEnd={stopClickingSkinInterval}
                   onTouchCancel={stopClickingSkinInterval}
                 />
@@ -560,6 +559,7 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
           closeOnClickaway={pickerCloseOnClickaway}
           containerSlot={containerSlot}
           buttonSlot={buttonSlot}
+          onPopperOpenChanged={popperOpenChanged}
         />
       )}
       <span id="dummy-clickable-skin" />

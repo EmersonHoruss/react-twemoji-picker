@@ -35,9 +35,10 @@ interface PopupEmojiProps {
   extraPaddingOffset: number;
   closeOnClickaway: boolean;
 
-  onPopperOpenChanged?: (val: boolean) => void;
   containerSlot?: React.ReactNode;
   buttonSlot?: React.ReactNode;
+  
+  onPopperOpenChanged?: (val: boolean) => void;
 }
 
 const PopupEmoji = React.forwardRef<PopupEmojiRef, PopupEmojiProps>(
@@ -51,9 +52,10 @@ const PopupEmoji = React.forwardRef<PopupEmojiRef, PopupEmojiProps>(
       extraPaddingOffset = 5,
       closeOnClickaway = true,
 
-      onPopperOpenChanged,
       containerSlot,
       buttonSlot,
+
+      onPopperOpenChanged,
     },
     popupEmojiRef
   ) => {
