@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import EmojiService from "../../services/EmojiService";
 
 import PopupEmoji from "../PopupEmoji";
@@ -22,9 +28,10 @@ interface TwemojiPickerProps {
   pickerAutoflip: boolean;
   pickerCloseOnClickaway: boolean;
   triggerType: "click" | "hover";
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   emojiData: Array<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   emojiGroups: Array<any>;
-  skinsSelection: boolean;
   recentEmojisFeat: boolean;
   recentEmojisStorage: "local" | "session" | "none";
   recentEmojiStorageName: string;
@@ -36,9 +43,9 @@ interface TwemojiPickerProps {
   twemojiPath: string;
   twemojiExtension: ".png" | ".svg" | ".jpg" | ".jpeg" | ".ico";
   twemojiFolder: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   randomEmojiArray: Array<any>;
   pickerPaddingOffset: number;
-  emojiTextWeightChanged: boolean;
 
   onAddTextBlur?: (emojiUnicode: string) => void;
   onEmojiUnicodeAdded?: (emojiUnicode: string) => void;
@@ -80,7 +87,6 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
   triggerType = "click",
   emojiData = [],
   emojiGroups = [],
-  skinsSelection = false,
   recentEmojisFeat = false,
   recentEmojisStorage = "none",
   recentEmojiStorageName = "vue-recent-twemojis",
@@ -94,7 +100,6 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
   twemojiFolder = "72x72",
   randomEmojiArray = DEFAULT_RANDOM_EMOJI_ARRAY,
   pickerPaddingOffset = 5,
-  emojiTextWeightChanged = false,
 
   onAddTextBlur,
   onEmojiUnicodeAdded,
@@ -390,6 +395,39 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
     }
   }, [emojiPickerDisabled]);
 
+  useEffect(() => {
+    setTwemojiOptions({
+      base: twemojiPath,
+      ext: twemojiExtension,
+      size: twemojiFolder,
+    });
+
+    if (recentEmojisFeat) {
+      setRecentEmojisFunc();
+    }
+
+    buildEmojiPack();
+    setEmojiListActive(emojiPack[0]?.emojiList ?? []);
+    setRandomEmojiFunc();
+  }, [
+    buildEmojiPack,
+    emojiPack,
+    recentEmojisFeat,
+    setRandomEmojiFunc,
+    setRecentEmojisFunc,
+    twemojiExtension,
+    twemojiFolder,
+    twemojiPath,
+  ]);
+
+  const randomEmojiImg = useMemo(() => {
+    triggerShowEmoji();
+
+    if (!randomEmoji || !twemojiOptions) return "";
+
+    return EmojiService.getEmojiImgFromUnicode(randomEmoji, twemojiOptions);
+  }, [randomEmoji, triggerShowEmoji, twemojiOptions]);
+
   const containerSlot = (
     <div id="emoji-container">
       <div id="emoji-popup" style={{ width: `${calculatedPickerWidth}px` }}>
@@ -431,7 +469,7 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
         {emojiPack.map((emojiGroup, index) => (
           <span
             key={emojiGroup.group}
-            id={emojiGroup.group}
+            id={emojiGroup.group + ""}
             dangerouslySetInnerHTML={{
               __html: getEmojiGroupDescription(emojiGroup.group),
             }}
@@ -463,9 +501,7 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
           searchEmojis.length === 0 &&
           isSearchingEmoji === false && (
             <div>
-              <strong style={{ padding: "3px" }}>
-                {{ searchEmojiNotFound }}
-              </strong>
+              <strong style={{ padding: "3px" }}>{searchEmojiNotFound}</strong>
             </div>
           )}
 
