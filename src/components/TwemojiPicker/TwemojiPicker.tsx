@@ -459,78 +459,80 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
             </div>
           </div>
         )}
-      </div>
 
-      <div id="emoji-popover-header" className="scroll-min">
-        {recentEmojisFeat && recentEmojis.length !== 0 && (
-          <span
-            dangerouslySetInnerHTML={{
-              __html: getEmojiImgFromUnicode("🕒"),
-            }}
-            className={`emoji-tab ${emojiGroupActive === -1 ? "active" : ""}`}
-            onClick={() => changeEmojiListActive(-1)}
-          />
-        )}
+        <div id="emoji-popover-header" className="scroll-min">
+          {recentEmojisFeat && recentEmojis.length !== 0 && (
+            <span
+              dangerouslySetInnerHTML={{
+                __html: getEmojiImgFromUnicode("🕒"),
+              }}
+              className={`emoji-tab ${emojiGroupActive === -1 ? "active" : ""}`}
+              onClick={() => changeEmojiListActive(-1)}
+            />
+          )}
 
-        {emojiPack.map((emojiGroup, index) => (
-          <span
-            key={emojiGroup.group}
-            id={emojiGroup.group + ""}
-            dangerouslySetInnerHTML={{
-              __html: getEmojiGroupDescription(emojiGroup.group),
-            }}
-            className={`emoji-tab ${
-              emojiGroupActive === index ? "active" : ""
-            }`}
-            onClick={() => changeEmojiListActive(index)}
-          />
-        ))}
-        <span />
-      </div>
+          {emojiPack.map((emojiGroup, index) => (
+            <span
+              key={emojiGroup.group}
+              id={emojiGroup.group + ""}
+              dangerouslySetInnerHTML={{
+                __html: getEmojiGroupDescription(emojiGroup.group),
+              }}
+              className={`emoji-tab ${
+                emojiGroupActive === index ? "active" : ""
+              }`}
+              onClick={() => changeEmojiListActive(index)}
+            />
+          ))}
+          <span />
+        </div>
 
-      <div
-        className="emoji-popover-inner"
-        style={{
-          width: `${calculatedPickerWidth}px`,
-          height: `${pickerHeight}px`,
-        }}
-      >
-        {isSearchingEmoji && (
-          <div>
-            <strong style={{ padding: "3px" }} id="loading-label">
-              {isLoadingLabel}
-            </strong>
-          </div>
-        )}
-
-        {searchTerm.length !== 0 &&
-          searchEmojis.length === 0 &&
-          isSearchingEmoji === false && (
+        <div
+          className="emoji-popover-inner"
+          style={{
+            width: `${calculatedPickerWidth}px`,
+            height: `${pickerHeight}px`,
+          }}
+        >
+          {isSearchingEmoji && (
             <div>
-              <strong style={{ padding: "3px" }}>{searchEmojiNotFound}</strong>
+              <strong style={{ padding: "3px" }} id="loading-label">
+                {isLoadingLabel}
+              </strong>
             </div>
           )}
 
-        {emojiListActive.length !== 0 && isSearchingEmoji === false && (
-          <div>
-            <p className="emoji-list">
-              {emojiListActive.map((emoji) => (
-                <span
-                  id={`twemoji-picker-click-emoji-${emoji.unicode}`}
-                  key={emoji.unicode}
-                  dangerouslySetInnerHTML={{ __html: emoji.img }}
-                  onClick={() => clickEmoji(emoji)}
-                  onMouseDown={startClickingSkinInterval}
-                  onMouseLeave={stopClickingSkinInterval}
-                  onMouseUp={stopClickingSkinInterval}
-                  onTouchStart={startClickingSkinInterval}
-                  onTouchEnd={stopClickingSkinInterval}
-                  onTouchCancel={stopClickingSkinInterval}
-                />
-              ))}
-            </p>
-          </div>
-        )}
+          {searchTerm.length !== 0 &&
+            searchEmojis.length === 0 &&
+            isSearchingEmoji === false && (
+              <div>
+                <strong style={{ padding: "3px" }}>
+                  {searchEmojiNotFound}
+                </strong>
+              </div>
+            )}
+
+          {emojiListActive.length !== 0 && isSearchingEmoji === false && (
+            <div>
+              <p className="emoji-list">
+                {emojiListActive.map((emoji) => (
+                  <span
+                    id={`twemoji-picker-click-emoji-${emoji.unicode}`}
+                    key={emoji.unicode}
+                    dangerouslySetInnerHTML={{ __html: emoji.img }}
+                    onClick={() => clickEmoji(emoji)}
+                    onMouseDown={startClickingSkinInterval}
+                    onMouseLeave={stopClickingSkinInterval}
+                    onMouseUp={stopClickingSkinInterval}
+                    onTouchStart={startClickingSkinInterval}
+                    onTouchEnd={stopClickingSkinInterval}
+                    onTouchCancel={stopClickingSkinInterval}
+                  />
+                ))}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
