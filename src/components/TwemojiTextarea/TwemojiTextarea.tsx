@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import "./TwemojiTextarea.css";
 import {
@@ -8,6 +8,7 @@ import {
 } from "../TwemojiPicker/TwemojiPickerProps";
 import TwemojiPicker from "../TwemojiPicker/TwemojiPicker";
 import SendIconImg from "../SendIconImg/SendIconImg";
+import TextareaParser from "../../services/TextareaParser";
 
 interface TwemojiTextareaProps extends TwemojiPickerProps {
   idTextarea?: string;
@@ -18,18 +19,26 @@ interface TwemojiTextareaProps extends TwemojiPickerProps {
   componentColor?: string;
   placeholder?: string;
   maxlength?: number;
+
+  onContentChangedHtml?: (content: string) => void;
+  onUpdateContent?: (content: string) => void;
+  onActualContentLengthChanged?: (length: number) => void;
+  onIsContentOverflowed?: (isOverflowed: boolean) => void;
+  onEnterKey?: (event: KeyboardEvent) => void;
+  onEmojiUnicodeAdded?: (unicode: string) => void;
+  onEmojiImgAdded?: (img: string) => void;
 }
 
 const TwemojiTextarea: React.FC<TwemojiTextareaProps> = ({
   idTextarea = "twemoji-textarea-outer",
   initialContent = "",
   enableSendBtn = false,
-  emojiPickerDisabled = false,
   textareaDisabled = false,
   componentColor = "#F7F7F7",
   placeholder = "",
   maxlength = null,
 
+  emojiPickerDisabled = false,
   pickerWidth = DEFAULT_PICKER_WIDTH,
   pickerHeight = 150,
   pickerPlacement = "top-start",
@@ -52,13 +61,87 @@ const TwemojiTextarea: React.FC<TwemojiTextareaProps> = ({
   twemojiFolder = "72x72",
   randomEmojiArray = DEFAULT_RANDOM_EMOJI_ARRAY,
   pickerPaddingOffset = 5,
+  emojiTextWeightChanged = false,
   buttonSlot,
+
+  onContentChangedHtml,
+  onUpdateContent,
+  onActualContentLengthChanged,
+  onIsContentOverflowed,
+  onEnterKey,
+  onEmojiUnicodeAdded,
+  onEmojiImgAdded,
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [savedRange, setSavedRange] = useState<any>(null);
   const [twemojiOptions, setTwemojiOptions] = useState<TwemojiOptions>(
     {} as TwemojiOptions
   );
   const [actualContentLength, setActualContentLength] = useState<number>(0);
+
+  const twemojiTextareaRef = useRef<HTMLDivElement>(null);
+
+  const updateContent = useCallback(
+    (event: Event) => {
+      const targetedElement = event.target as HTMLElement;
+      let content = targetedElement.innerHTML;
+
+      onContentChangedHtml?.(content);
+
+      content = TextareaParser.replaceEmojiWithAltAttribute(content);
+      content = TextareaParser.unescapeHtml(content);
+
+      if (content.length !== 0 && content[content.length - 1] === "\n") {
+        content = content.slice(0, -1);
+      }
+
+      const length = emojiTextWeightChanged
+        ? TwitterText.parseTweet(content || "", {
+            maxWeightedTweetLength: 280,
+            scale: 100,
+            defaultWeight: 100,
+          }).weightedLength
+        : TwitterText.parseTweet(content || "").weightedLength;
+
+      setActualContentLength(length);
+      onUpdateContent?.(content);
+      onActualContentLengthChanged?.(length);
+      onContentChangedHtml?.(content);
+    },
+    [
+      emojiTextWeightChanged,
+      onUpdateContent,
+      onActualContentLengthChanged,
+      onContentChangedHtml,
+    ]
+  );
+
+  const emitIsContentOverflowed = useCallback(() => {
+    if (!maxlength) return;
+
+    const overflowed = actualContentLength > maxlength;
+
+    onIsContentOverflowed?.(overflowed);
+  }, [actualContentLength, maxlength, onIsContentOverflowed]);
+
+  const emitEnterKeyEvent = useCallback(
+    (event: KeyboardEvent) => {
+      emitIsContentOverflowed();
+      onEnterKey?.(event);
+    },
+    [emitIsContentOverflowed, onEnterKey]
+  );
+
+  const enterKey = useCallback(
+    (event: KeyboardEvent) => {
+      if (!event.shiftKey) {
+        event.preventDefault();
+        emitIsContentOverflowed();
+        emitEnterKeyEvent(event);
+      }
+    },
+    [emitEnterKeyEvent, emitIsContentOverflowed]
+  );
 
   useEffect(() => {
     setTwemojiOptions({
@@ -108,6 +191,7 @@ const TwemojiTextarea: React.FC<TwemojiTextareaProps> = ({
       />
 
       <div
+        ref={twemojiTextareaRef}
         id="twemoji-textarea"
         className="twemojiTextarea"
         contentEditable={!textareaDisabled}

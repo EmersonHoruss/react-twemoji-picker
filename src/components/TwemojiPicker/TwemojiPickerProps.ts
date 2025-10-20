@@ -28,6 +28,7 @@ export interface TwemojiPickerProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   randomEmojiArray?: Array<any>;
   pickerPaddingOffset?: number;
+  emojiTextWeightChanged?:false
 
   onAddTextBlur?: (emojiUnicode: string) => void;
   onEmojiUnicodeAdded?: (emojiUnicode: string) => void;
