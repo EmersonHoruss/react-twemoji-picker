@@ -14,66 +14,13 @@ import type EmojiPack from "../../interfaces/EmojiPack";
 import type Emoji from "../../interfaces/Emoji";
 import type TwemojiOptions from "../../interfaces/TwemojiOptions";
 import type EmojiGroup from "../../interfaces/EmojiGroup";
-import type { Placement } from "@popperjs/core";
 
 import "./TwemojiPicker.css";
-
-interface TwemojiPickerProps {
-  emojiPickerDisabled?: boolean;
-  pickerWidth?: number | string;
-  pickerHeight?: number;
-  pickerPlacement?: Placement;
-  pickerArrowEnabled?: boolean;
-  pickerAutoflip?: boolean;
-  pickerCloseOnClickaway?: boolean;
-  triggerType?: "click" | "hover";
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  emojiData?: Array<any>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  emojiGroups?: Array<any>;
-  recentEmojisFeat?: boolean;
-  recentEmojisStorage?: "local" | "session" | "none";
-  recentEmojiStorageName?: string;
-  recentEmojiLimit?: number;
-  searchEmojisFeat?: boolean;
-  searchEmojiPlaceholder?: string;
-  isLoadingLabel?: string;
-  searchEmojiNotFound?: string;
-  twemojiPath?: string;
-  twemojiExtension?: ".png" | ".svg" | ".jpg" | ".jpeg" | ".ico";
-  twemojiFolder?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  randomEmojiArray?: Array<any>;
-  pickerPaddingOffset?: number;
-
-  onAddTextBlur?: (emojiUnicode: string) => void;
-  onEmojiUnicodeAdded?: (emojiUnicode: string) => void;
-  onEmojiImgAdded?: (emojiImg: string) => void;
-}
-
-const DEFAULT_PICKER_WIDTH = 250;
-const DEFAULT_RANDOM_EMOJI_ARRAY = [
-  "😀",
-  "😃",
-  "😄",
-  "😁",
-  "😆",
-  "😅",
-  "🤣",
-  "😂",
-  "🙂",
-  "🙃",
-  "😉",
-  "😊",
-  "🥴",
-  "😵",
-  "🤯",
-  "🤠",
-  "🥳",
-  "😎",
-  "🤓",
-  "🧐",
-];
+import {
+  DEFAULT_PICKER_WIDTH,
+  DEFAULT_RANDOM_EMOJI_ARRAY,
+  type TwemojiPickerProps,
+} from "./TwemojiPickerProps";
 
 const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
   emojiPickerDisabled = false,
@@ -103,6 +50,8 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
   onAddTextBlur,
   onEmojiUnicodeAdded,
   onEmojiImgAdded,
+
+  buttonSlot,
 }) => {
   const [, setIsClickingEmojiMouseDown] = useState<boolean>(false);
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
@@ -537,7 +486,7 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
     </div>
   );
 
-  const buttonSlot = (
+  const defaultButtonSlot = (
     <button
       id="btn-emoji-default"
       disabled={emojiPickerDisabled}
@@ -555,6 +504,8 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
     </button>
   );
 
+  const finalButtonSlot = buttonSlot ?? defaultButtonSlot;
+
   return (
     <div>
       {emojiData && emojiData.length > 0 && (
@@ -567,7 +518,7 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
           extraPaddingOffset={pickerPaddingOffset}
           closeOnClickaway={pickerCloseOnClickaway}
           containerSlot={containerSlot}
-          buttonSlot={buttonSlot}
+          buttonSlot={finalButtonSlot}
           onPopperOpenChanged={popperOpenChanged}
         />
       )}

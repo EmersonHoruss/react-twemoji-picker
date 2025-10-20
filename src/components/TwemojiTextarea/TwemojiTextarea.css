@@ -20,8 +20,8 @@
   cursor: text;
 }
 
-.twemoji-textarea-outer > #twemoji-textarea[placeholder]:empty::before {
-  content: attr(placeholder);
+.twemoji-textarea-outer > #twemoji-textarea[data-placeholder]:empty::before {
+  content: attr(data-placeholder);
   position: absolute;
   color: gray;
   background-color: transparent;
