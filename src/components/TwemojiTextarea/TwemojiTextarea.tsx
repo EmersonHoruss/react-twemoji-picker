@@ -11,6 +11,8 @@ import SendIconImg from "../SendIconImg/SendIconImg";
 import TextareaParser from "../../services/TextareaParser";
 import EmojiService from "../../services/EmojiService";
 
+import * as TwitterText from "twitter-text";
+
 interface TwemojiTextareaProps extends TwemojiPickerProps {
   idTextarea?: string;
   initialContent?: string;
