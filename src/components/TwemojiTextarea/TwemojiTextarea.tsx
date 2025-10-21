@@ -11,7 +11,7 @@ import SendIconImg from "../SendIconImg/SendIconImg";
 import TextareaParser from "../../services/TextareaParser";
 import EmojiService from "../../services/EmojiService";
 
-import * as TwitterText from "twitter-text";
+import TwitterText from "twitter-text";
 
 interface TwemojiTextareaProps extends TwemojiPickerProps {
   idTextarea?: string;
@@ -102,6 +102,7 @@ const TwemojiTextarea: React.FC<TwemojiTextareaProps> = ({
         content = content.slice(0, -1);
       }
 
+      console.log("🚀 ~ TwemojiTextarea ~ TwitterText:", TwitterText);
       const length = emojiTextWeightChanged
         ? TwitterText.parseTweet(content || "", {
             maxWeightedTweetLength: 280,
