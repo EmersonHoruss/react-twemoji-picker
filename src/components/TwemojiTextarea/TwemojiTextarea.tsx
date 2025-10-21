@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  type ClipboardEventHandler,
-} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import "./TwemojiTextarea.css";
 import {
@@ -288,6 +282,12 @@ const TwemojiTextarea: React.FC<TwemojiTextareaProps> = ({
       size: twemojiFolder,
     });
   }, [twemojiPath, twemojiExtension, twemojiFolder]);
+
+  useEffect(() => {
+    if (initialContent.length > 0 && twemojiTextareaRef?.current) {
+      twemojiTextareaRef.current.innerHTML = initialContent;
+    }
+  }, [initialContent]);
 
   return (
     <div
