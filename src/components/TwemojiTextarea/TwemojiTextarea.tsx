@@ -102,7 +102,6 @@ const TwemojiTextarea: React.FC<TwemojiTextareaProps> = ({
         content = content.slice(0, -1);
       }
 
-      console.log("🚀 ~ TwemojiTextarea ~ TwitterText:", TwitterText);
       const length = emojiTextWeightChanged
         ? TwitterText.parseTweet(content || "", {
             maxWeightedTweetLength: 280,
