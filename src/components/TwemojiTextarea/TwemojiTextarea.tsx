@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ClipboardEventHandler,
+} from "react";
 
 import "./TwemojiTextarea.css";
 import {
@@ -25,7 +31,11 @@ interface TwemojiTextareaProps extends TwemojiPickerProps {
   onUpdateContent?: (content: string) => void;
   onActualContentLengthChanged?: (length: number) => void;
   onIsContentOverflowed?: (isOverflowed: boolean) => void;
-  onEnterKey?: (event: KeyboardEvent) => void;
+  onEnterKey?: (
+    event:
+      | React.KeyboardEvent<HTMLDivElement>
+      | React.MouseEvent<HTMLDivElement>
+  ) => void;
   onEmojiUnicodeAdded?: (unicode: string) => void;
   onEmojiImgAdded?: (img: string) => void;
 }
@@ -83,7 +93,7 @@ const TwemojiTextarea: React.FC<TwemojiTextareaProps> = ({
   const twemojiTextareaRef = useRef<HTMLDivElement>(null);
 
   const updateContent = useCallback(
-    (event: Event) => {
+    (event: React.FormEvent<HTMLDivElement>) => {
       const targetedElement = event.target as HTMLElement;
       let content = targetedElement.innerHTML;
 
@@ -126,7 +136,11 @@ const TwemojiTextarea: React.FC<TwemojiTextareaProps> = ({
   }, [actualContentLength, maxlength, onIsContentOverflowed]);
 
   const emitEnterKeyEvent = useCallback(
-    (event: KeyboardEvent) => {
+    (
+      event:
+        | React.KeyboardEvent<HTMLDivElement>
+        | React.MouseEvent<HTMLDivElement>
+    ) => {
       emitIsContentOverflowed();
       onEnterKey?.(event);
     },
@@ -134,7 +148,7 @@ const TwemojiTextarea: React.FC<TwemojiTextareaProps> = ({
   );
 
   const enterKey = useCallback(
-    (event: KeyboardEvent) => {
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
       if (!event.shiftKey) {
         event.preventDefault();
         emitIsContentOverflowed();
@@ -183,7 +197,7 @@ const TwemojiTextarea: React.FC<TwemojiTextareaProps> = ({
   );
 
   const shiftEnterKey = useCallback(
-    (event: KeyboardEvent) => {
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
       event.stopPropagation();
       event.preventDefault();
 
@@ -206,7 +220,7 @@ const TwemojiTextarea: React.FC<TwemojiTextareaProps> = ({
   );
 
   const onPaste = useCallback(
-    (pasteEvent: ClipboardEvent) => {
+    (pasteEvent: React.ClipboardEvent<HTMLDivElement>) => {
       pasteEvent.stopPropagation();
       pasteEvent.preventDefault();
 
