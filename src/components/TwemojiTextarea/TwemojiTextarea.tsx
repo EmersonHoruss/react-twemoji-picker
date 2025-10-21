@@ -9,6 +9,7 @@ import {
 import TwemojiPicker from "../TwemojiPicker/TwemojiPicker";
 import SendIconImg from "../SendIconImg/SendIconImg";
 import TextareaParser from "../../services/TextareaParser";
+import EmojiService from "../../services/EmojiService";
 
 interface TwemojiTextareaProps extends TwemojiPickerProps {
   idTextarea?: string;
@@ -143,6 +144,129 @@ const TwemojiTextarea: React.FC<TwemojiTextareaProps> = ({
     [emitEnterKeyEvent, emitIsContentOverflowed]
   );
 
+  const saveSelection = useCallback(() => {
+    setSavedRange(window.getSelection()?.getRangeAt(0));
+  }, []);
+
+  const focus = useCallback(() => {
+    const doc = twemojiTextareaRef.current;
+    if (!doc) return;
+
+    const childNode = doc.childNodes[0];
+    doc.focus();
+
+    if (childNode !== undefined) return;
+
+    const textNode = document.createTextNode("");
+    doc.appendChild(textNode);
+    const range = document.createRange();
+    const sel = window.getSelection();
+    range.setStart(doc.childNodes[0], 0);
+    range.collapse(true);
+    sel?.removeAllRanges();
+    sel?.addRange(range);
+    saveSelection();
+  }, [saveSelection]);
+
+  const addText = useCallback(
+    (text: string) => {
+      focus();
+
+      let textAux = TextareaParser.escapeHTML(text);
+      textAux = EmojiService.getEmojiImgFromUnicode(textAux, twemojiOptions);
+
+      document.execCommand("insertHTML", false, textAux);
+
+      saveSelection();
+    },
+    [focus, saveSelection, twemojiOptions]
+  );
+
+  const shiftEnterKey = useCallback(
+    (event: KeyboardEvent) => {
+      event.stopPropagation();
+      event.preventDefault();
+
+      const el = twemojiTextareaRef.current;
+      if (!el) return;
+
+      if (
+        el.innerHTML === "" ||
+        el.innerHTML[el.innerHTML.length - 1] !== "\n"
+      ) {
+        addText("\n");
+        addText("\n");
+      } else {
+        addText("\n");
+      }
+
+      el.scrollTop = el.scrollHeight;
+    },
+    [addText]
+  );
+
+  const onPaste = useCallback(
+    (pasteEvent: ClipboardEvent) => {
+      pasteEvent.stopPropagation();
+      pasteEvent.preventDefault();
+
+      const clipboardData = pasteEvent.clipboardData;
+      let pastedData = clipboardData?.getData("Text") || "";
+      pastedData = TextareaParser.escapeHTML(pastedData);
+      pastedData = EmojiService.getEmojiImgFromUnicode(
+        pastedData,
+        twemojiOptions
+      );
+
+      document.execCommand("insertHTML", false, pastedData);
+
+      if (twemojiTextareaRef?.current)
+        twemojiTextareaRef.current.scrollTop =
+          twemojiTextareaRef.current.scrollHeight;
+    },
+    [twemojiOptions]
+  );
+
+  const blur = useCallback(() => {
+    twemojiTextareaRef?.current?.blur();
+  }, []);
+
+  const restoreSelection = useCallback(() => {
+    if (!twemojiTextareaRef?.current) return;
+
+    twemojiTextareaRef.current?.focus();
+
+    if (savedRange == null) return;
+
+    const s = window.getSelection();
+    if (s?.rangeCount) {
+      s?.removeAllRanges();
+    }
+    s?.addRange(savedRange.current);
+  }, [savedRange]);
+
+  const addTextBlur = useCallback(
+    (text: string) => {
+      addText(text);
+      blur();
+    },
+    [addText, blur]
+  );
+
+  const emojiUnicodeAdded = useCallback(
+    (unicode: string) => {
+      onEmojiUnicodeAdded?.(unicode);
+    },
+    [onEmojiUnicodeAdded]
+  );
+
+  const emojiImgAdded = useCallback(
+    (img: string) => {
+      onEmojiImgAdded?.(img);
+    },
+    [onEmojiImgAdded]
+  );
+
   useEffect(() => {
     setTwemojiOptions({
       base: twemojiPath,
@@ -208,7 +332,7 @@ const TwemojiTextarea: React.FC<TwemojiTextareaProps> = ({
       />
 
       {enableSendBtn && (
-        <div id="send-btn" onClick={emiteEnterKeyEvent}>
+        <div id="send-btn" onClick={emitEnterKeyEvent}>
           <SendIconImg />
         </div>
       )}
