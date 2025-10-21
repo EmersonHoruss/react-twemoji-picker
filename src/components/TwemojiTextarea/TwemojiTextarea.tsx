@@ -288,6 +288,12 @@ const TwemojiTextarea: React.FC<TwemojiTextareaProps> = ({
   useEffect(() => {
     if (initialContent.length > 0 && twemojiTextareaRef?.current) {
       twemojiTextareaRef.current.innerHTML = initialContent;
+
+      let content = TextareaParser.replaceEmojiWithAltAttribute(initialContent);
+      content = TextareaParser.unescapeHtml(content);
+      const length = TwitterText.parseTweet(content || "").weightedLength;
+
+      setActualContentLength(length);
     }
   }, [initialContent]);
 
