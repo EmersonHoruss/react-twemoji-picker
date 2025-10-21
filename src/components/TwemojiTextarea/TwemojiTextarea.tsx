@@ -252,7 +252,7 @@ const TwemojiTextarea: React.FC<TwemojiTextareaProps> = ({
     if (s?.rangeCount) {
       s?.removeAllRanges();
     }
-    s?.addRange(savedRange.current);
+    s?.addRange(savedRange);
   }, [savedRange]);
 
   const addTextBlur = useCallback(
