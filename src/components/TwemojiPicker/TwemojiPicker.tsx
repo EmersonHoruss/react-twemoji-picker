@@ -257,35 +257,32 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
     if (emojis) setRecentEmojis(emojis);
   }, [recentEmojiStorageName, recentEmojisStorage]);
 
-  const searchEmojiByTerm = useCallback(() => {
-    setIsSearchingEmoji(true);
-    clearTimeout(searchTimeout);
+  const searchEmojiByTerm = useCallback(
+    (searchTerm: string) => {
+      setIsSearchingEmoji(true);
+      clearTimeout(searchTimeout);
 
-    if (searchTerm.length > 0) {
-      const timeout = setTimeout(() => {
-        if (!twemojiOptions) return;
-        const emojis = EmojiService.getEmojiImgArrayFromEmojiPackByTerm(
-          emojiData,
-          twemojiOptions,
-          searchTerm
-        );
-        setSearchEmojis(emojis);
-        setEmojiGroupActive(-2);
-        setEmojiListActive(emojis);
+      if (searchTerm.length > 0) {
+        const timeout = setTimeout(() => {
+          if (!twemojiOptions) return;
+          const emojis = EmojiService.getEmojiImgArrayFromEmojiPackByTerm(
+            emojiData,
+            twemojiOptions,
+            searchTerm
+          );
+          setSearchEmojis(emojis);
+          setEmojiGroupActive(-2);
+          setEmojiListActive(emojis);
+          setIsSearchingEmoji(false);
+        }, 300);
+        setSearchTimeout(timeout);
+      } else {
+        changeEmojiListActive(0);
         setIsSearchingEmoji(false);
-      }, 300);
-      setSearchTimeout(timeout);
-    } else {
-      changeEmojiListActive(0);
-      setIsSearchingEmoji(false);
-    }
-  }, [
-    changeEmojiListActive,
-    emojiData,
-    searchTerm,
-    searchTimeout,
-    twemojiOptions,
-  ]);
+      }
+    },
+    [changeEmojiListActive, emojiData, searchTimeout, twemojiOptions]
+  );
 
   const popperOpenChanged = useCallback((popperOpen: boolean) => {
     setIsPickerOpen(popperOpen);
@@ -401,7 +398,7 @@ const TwemojiPicker: React.FC<TwemojiPickerProps> = ({
                 placeholder={searchEmojiPlaceholder}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                onInput={searchEmojiByTerm}
+                onInput={(e) => searchEmojiByTerm(e.currentTarget.value)}
                 onFocus={() => setIsSearchFocused(true)}
                 onBlur={() => setIsSearchFocused(false)}
               />
